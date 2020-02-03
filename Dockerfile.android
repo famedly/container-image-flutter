@@ -3,8 +3,8 @@ FROM openjdk:8-slim
 LABEL maintainer="info@famedly.com"
 
 # make Apt non-interactive
-RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci \
-  && echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90circleci
+RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90famedly \
+  && echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90famedly
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -73,7 +73,7 @@ RUN sudo apt-get update && \
 
 # Download and install Android SDK
 RUN sudo mkdir -p ${android_home} && \
-    sudo chown -R circleci:circleci ${android_home} && \
+    sudo chown -R famedly:famedly ${android_home} && \
     curl --silent --show-error --location --fail --retry 3 --output /tmp/${sdk_version} https://dl.google.com/android/repository/${sdk_version} && \
     unzip -q /tmp/${sdk_version} -d ${android_home} && \
     rm /tmp/${sdk_version}
@@ -122,6 +122,6 @@ ARG android_ndk_home=/opt/android/${ndk_version}
 RUN curl --silent --show-error --location --fail --retry 3 --output /tmp/${ndk_version}.zip https://dl.google.com/android/repository/${ndk_version}-linux-x86_64.zip && \
     sudo unzip -q /tmp/${ndk_version}.zip -d /opt/android && \
     rm /tmp/${ndk_version}.zip && \
-    sudo chown -R circleci:circleci ${android_ndk_home}
+    sudo chown -R famedly:famedly ${android_ndk_home}
 
 ENV ANDROID_NDK_HOME ${android_ndk_home}
