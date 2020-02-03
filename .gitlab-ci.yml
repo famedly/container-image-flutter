@@ -10,8 +10,10 @@ docker-build-latest-android:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
+    - curl https://github.com/grycap/minicon/releases/download/1.4-2/minicon_1.4-2.deb --output ./minicon_1.4-2.deb && apt-get update && apt-get install -y ./minicon-1.2-1.deb
     - docker pull $CI_REGISTRY_IMAGE:android || true
-    - docker build --pull -t "${CI_REGISTRY_IMAGE}:android" --cache-from $CI_REGISTRY_IMAGE:android -f Dockerfile.android .
+    - docker build --pull -t "${CI_REGISTRY_IMAGE}:android_raw" --cache-from $CI_REGISTRY_IMAGE:android -f Dockerfile.android .
+    - minidock -i "${CI_REGISTRY_IMAGE}:android_raw" -t "${CI_REGISTRY_IMAGE}:android" --apt
     - docker push "${CI_REGISTRY_IMAGE}:android"
   only:
     - master
