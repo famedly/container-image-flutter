@@ -1,4 +1,4 @@
-FROM cirrusci/android-sdk:29-ndk
+FROM circleci/android:api-29-ndk
 
 LABEL maintainer="info@famedly.com"
 
