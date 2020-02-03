@@ -1,0 +1,127 @@
+FROM openjdk:8-slim
+
+LABEL maintainer="info@famedly.com"
+
+# make Apt non-interactive
+RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci \
+  && echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90circleci
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Make sure PATH includes ~/.local/bin
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=839155
+# This only works for root. The famedly user is done near the end of this Dockerfile
+RUN echo 'PATH="$HOME/.local/bin:$PATH"' >> /etc/profile.d/user-local-path.sh
+
+# man directory is missing in some base images
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199
+RUN apt-get update \
+  && mkdir -p /usr/share/man/man1 \
+  && apt-get install -y \
+    git mercurial xvfb apt \
+    locales sudo openssh-client ca-certificates tar gzip parallel \
+    net-tools netcat unzip zip bzip2 gnupg curl wget make \
+  && sudo rm -rf /var/lib/apt/lists/*
+
+
+# Set timezone to UTC by default
+RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
+
+# Use unicode
+RUN locale-gen C.UTF-8 || true
+ENV LANG=C.UTF-8
+
+RUN groupadd --gid 3434 famedly \
+  && useradd --uid 3434 --gid famedly --shell /bin/bash --create-home famedly \
+  && echo 'famedly ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-famedly \
+  && echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
+
+USER famedly
+ENV PATH /home/famedly/.local/bin:/home/famedly/bin:${PATH}
+
+CMD ["/bin/sh"]
+
+# Now commands run as user `famedly`
+
+# Switching user can confuse Docker's idea of $HOME, so we set it explicitly
+ENV HOME /home/famedly
+
+# Install Google Cloud SDK
+
+RUN sudo apt-get update -qqy && sudo apt-get install -qqy \
+        python-dev \
+        python-pip \
+        python-setuptools \
+        apt-transport-https \
+        lsb-release && \
+    sudo rm -rf /var/lib/apt/lists/*
+
+RUN sudo apt-get update && sudo apt-get install gcc-multilib && \
+    sudo rm -rf /var/lib/apt/lists/* &&
+
+ARG sdk_version=sdk-tools-linux-4333796.zip
+ARG android_home=/opt/android/sdk
+
+# SHA-256 92ffee5a1d98d856634e8b71132e8a95d96c83a63fde1099be3d86df3106def9
+
+RUN sudo apt-get update && \
+    sudo apt-get install --yes \
+        xvfb lib32z1 lib32stdc++6 build-essential \
+        libcurl4-openssl-dev libglu1-mesa libxi-dev libxmu-dev \
+        libglu1-mesa-dev && \
+    sudo rm -rf /var/lib/apt/lists/*
+
+# Download and install Android SDK
+RUN sudo mkdir -p ${android_home} && \
+    sudo chown -R circleci:circleci ${android_home} && \
+    curl --silent --show-error --location --fail --retry 3 --output /tmp/${sdk_version} https://dl.google.com/android/repository/${sdk_version} && \
+    unzip -q /tmp/${sdk_version} -d ${android_home} && \
+    rm /tmp/${sdk_version}
+
+# Set environmental variables
+ENV ANDROID_HOME ${android_home}
+ENV ADB_INSTALL_TIMEOUT 120
+ENV PATH=${ANDROID_HOME}/emulator:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}
+
+RUN mkdir ~/.android && echo '### User Sources for Android SDK Manager' > ~/.android/repositories.cfg
+
+RUN yes | sdkmanager --licenses && yes | sdkmanager --update
+
+# Update SDK manager and install system image, platform and build tools
+RUN sdkmanager \
+  "tools" \
+  "platform-tools" \
+  "emulator"
+
+RUN sdkmanager \
+  "build-tools;25.0.0" \
+  "build-tools;25.0.1" \
+  "build-tools;25.0.2" \
+  "build-tools;25.0.3" \
+  "build-tools;26.0.1" \
+  "build-tools;26.0.2" \
+  "build-tools;27.0.0" \
+  "build-tools;27.0.1" \
+  "build-tools;27.0.2" \
+  "build-tools;27.0.3" \
+  "build-tools;28.0.0" \
+  "build-tools;28.0.1" \
+  "build-tools;28.0.2" \
+  "build-tools;28.0.3" \
+  "build-tools;29.0.0" \
+  "build-tools;29.0.1" \
+  "build-tools;29.0.2"
+
+# API_LEVEL string gets replaced by m4
+RUN sdkmanager "platforms;android-29"
+
+ARG ndk_version=android-ndk-r20
+ARG android_ndk_home=/opt/android/${ndk_version}
+
+# install NDK
+RUN curl --silent --show-error --location --fail --retry 3 --output /tmp/${ndk_version}.zip https://dl.google.com/android/repository/${ndk_version}-linux-x86_64.zip && \
+    sudo unzip -q /tmp/${ndk_version}.zip -d /opt/android && \
+    rm /tmp/${ndk_version}.zip && \
+    sudo chown -R circleci:circleci ${android_ndk_home}
+
+ENV ANDROID_NDK_HOME ${android_ndk_home}

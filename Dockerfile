@@ -1,4 +1,5 @@
-FROM circleci/android:api-29-ndk
+ARG android_image
+FROM ${android_image}
 
 LABEL maintainer="info@famedly.com"
 
