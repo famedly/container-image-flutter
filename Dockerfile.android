@@ -57,7 +57,7 @@ RUN sudo apt-get update -qqy && sudo apt-get install -qqy \
     sudo rm -rf /var/lib/apt/lists/*
 
 RUN sudo apt-get update && sudo apt-get install gcc-multilib && \
-    sudo rm -rf /var/lib/apt/lists/* &&
+    sudo rm -rf /var/lib/apt/lists/*
 
 ARG sdk_version=sdk-tools-linux-4333796.zip
 ARG android_home=/opt/android/sdk
