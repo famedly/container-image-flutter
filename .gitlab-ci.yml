@@ -1,4 +1,4 @@
-docker-build-master:
+docker-build-latest-master:
   # Official docker image.
   image: docker:latest
   stage: build
@@ -8,12 +8,48 @@ docker-build-master:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
     - docker build --pull -t "$CI_REGISTRY_IMAGE" --build-arg flutter_version=$CI_FLUTTER_STABLE_VERSION .
-    - docker build --pull -t "${CI_REGISTRY_IMAGE}:stable" --build-arg flutter_version=$CI_FLUTTER_STABLE_VERSION .
-    - docker build --pull -t "${CI_REGISTRY_IMAGE}:beta" --build-arg flutter_version=$CI_FLUTTER_BETA_VERSION .
-    - docker build --pull -t "${CI_REGISTRY_IMAGE}:dev" --build-arg flutter_version=$CI_FLUTTER_DEV_VERSION .
     - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
+
+docker-build-stable-master:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "${CI_REGISTRY_IMAGE}:stable" --build-arg flutter_version=$CI_FLUTTER_STABLE_VERSION .
     - docker push "${CI_REGISTRY_IMAGE}:stable"
+  only:
+    - master
+
+docker-build-beta-master:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "${CI_REGISTRY_IMAGE}:beta" --build-arg flutter_version=$CI_FLUTTER_BETA_VERSION .
     - docker push "${CI_REGISTRY_IMAGE}:beta"
+  only:
+    - master
+
+docker-build-dev-master:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "${CI_REGISTRY_IMAGE}:dev" --build-arg flutter_version=$CI_FLUTTER_DEV_VERSION .
     - docker push "${CI_REGISTRY_IMAGE}:dev"
   only:
     - master
