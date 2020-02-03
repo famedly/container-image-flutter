@@ -12,7 +12,7 @@ docker-build-latest-android:
   script:
     - docker pull $CI_REGISTRY_IMAGE:android || true
     - docker build --pull -t "${CI_REGISTRY_IMAGE}:android_raw" --cache-from $CI_REGISTRY_IMAGE:android -f Dockerfile.android .
-    - apk add git jq tar curl bash coreutils && curl -L https://github.com/grycap/minicon/releases/download/1.4-2/minicon_1.4-2-ppa.tar.gz --output ./minicon.tar.gz && tar -xvf ./minicon.tar.gz && chmod +X ./minicon_1.4-2-ppa/minicon_1.4-2/usr/bin/minidock && bash -c "./minicon_1.4-2-ppa/minicon_1.4-2/usr/bin/minidock -v -i \"${CI_REGISTRY_IMAGE}:android_raw\" -t \"${CI_REGISTRY_IMAGE}:android\" --apt"
+    - apk add git jq tar curl bash coreutils && curl -L https://github.com/grycap/minicon/releases/download/1.4-2/minicon_1.4-2-ppa.tar.gz --output ./minicon.tar.gz && tar -xvf ./minicon.tar.gz && chmod +X ./minicon_1.4-2-ppa/minicon_1.4-2/usr/bin/minidock && bash -c "./minicon_1.4-2-ppa/minicon_1.4-2/usr/bin/minidock -v --debug -i \"${CI_REGISTRY_IMAGE}:android_raw\" -t \"${CI_REGISTRY_IMAGE}:android\" --apt"
     - docker push "${CI_REGISTRY_IMAGE}:android"
   only:
     - master
