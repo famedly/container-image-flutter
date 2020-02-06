@@ -1,15 +1,20 @@
-variables:
-  DOCKER_HOST: "tcp://localhost:2375"
+.docker: &dind
+  services:
+  - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
+  #tags:
+  #- docker
 
 stages:
   - build_android
   - build
 docker-build-latest-android:
-  # Official docker image.
-  image: docker:latest
+  ## Official docker image.
+  #image: docker:latest
+  <<: *dind
   stage: build_android
-  services:
-    - docker:dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
@@ -21,11 +26,10 @@ docker-build-latest-android:
     - master
 
 docker-build-latest-master:
-  # Official docker image.
-  image: docker:latest
+  ## Official docker image.
+  #image: docker:latest
+  <<: *dind
   stage: build
-  services:
-    - docker:dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
@@ -66,11 +70,10 @@ docker-build-beta-master:
     - master
 
 docker-build-dev-master:
-  # Official docker image.
-  image: docker:latest
+  ## Official docker image.
+  #image: docker:latest
+  <<: *dind
   stage: build
-  services:
-    - docker:dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
@@ -81,11 +84,10 @@ docker-build-dev-master:
     - master
 
 docker-build:
-  # Official docker image.
-  image: docker:latest
+  ## Official docker image.
+  #image: docker:latest
+  <<: *dind
   stage: build
-  services:
-    - docker:dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
