@@ -1,6 +1,5 @@
-
-  # Official docker image.
-  image: docker:latest
+# Official docker image.
+image: docker:latest
 
 .docker: &dind
   services:
