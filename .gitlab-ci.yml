@@ -1,3 +1,7 @@
+
+  # Official docker image.
+  image: docker:latest
+
 .docker: &dind
   services:
   - docker:dind
@@ -11,8 +15,6 @@ stages:
   - build_android
   - build
 docker-build-latest-android:
-  ## Official docker image.
-  #image: docker:latest
   <<: *dind
   stage: build_android
   before_script:
@@ -26,8 +28,6 @@ docker-build-latest-android:
     - master
 
 docker-build-latest-master:
-  ## Official docker image.
-  #image: docker:latest
   <<: *dind
   stage: build
   before_script:
@@ -40,8 +40,6 @@ docker-build-latest-master:
     - master
 
 docker-build-stable-master:
-  # Official docker image.
-  image: docker:latest
   stage: build
   services:
     - docker:dind
@@ -55,8 +53,6 @@ docker-build-stable-master:
     - master
 
 docker-build-beta-master:
-  # Official docker image.
-  image: docker:latest
   stage: build
   services:
     - docker:dind
@@ -70,8 +66,6 @@ docker-build-beta-master:
     - master
 
 docker-build-dev-master:
-  ## Official docker image.
-  #image: docker:latest
   <<: *dind
   stage: build
   before_script:
@@ -84,8 +78,6 @@ docker-build-dev-master:
     - master
 
 docker-build:
-  ## Official docker image.
-  #image: docker:latest
   <<: *dind
   stage: build
   before_script:
