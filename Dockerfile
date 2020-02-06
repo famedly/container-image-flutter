@@ -18,7 +18,7 @@ RUN flutter precache && flutter config --enable-web && flutter doctor
 #    && sudo rm -rf /var/lib/apt/lists/*
 
 # Make sure we have UTF-8
-RUN echo "LC_ALL=en_US.UTF-8" | sudo tee -a /etc/environment && echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen && echo "LANG=en_US.UTF-8" | sudo tee -a /etc/locale.conf && locale-gen en_US.UTF-8
+RUN echo "LC_ALL=en_US.UTF-8" | sudo tee -a /etc/environment && echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen && echo "LANG=en_US.UTF-8" | sudo tee -a /etc/locale.conf && sudo locale-gen en_US.UTF-8
 
 # Get openssl
 RUN sudo apt-get update \
