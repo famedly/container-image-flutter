@@ -16,7 +16,10 @@ docker-build-latest-android:
     - docker build --pull -t "${CI_REGISTRY_IMAGE}:android" -f Dockerfile.android .
     - docker push "${CI_REGISTRY_IMAGE}:android"
   only:
-    - master
+    refs:
+        - master
+    changes:
+        - Dockerfile.android
 
 docker-build-latest-master:
   # Official docker image.
