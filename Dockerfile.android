@@ -18,18 +18,14 @@ RUN echo 'PATH="$HOME/.local/bin:$PATH"' >> /etc/profile.d/user-local-path.sh
 RUN apt-get update \
   && mkdir -p /usr/share/man/man1 \
   && apt-get install -y \
-    git mercurial xvfb apt \
-    locales sudo openssh-client ca-certificates tar gzip parallel \
-    net-tools netcat unzip zip bzip2 gnupg curl wget make \
+    git apt \
+    locales sudo ca-certificates tar gzip parallel \
+    unzip zip bzip2 gnupg curl wget make \
   && sudo rm -rf /var/lib/apt/lists/*
 
 
 # Set timezone to UTC by default
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
-
-# Use unicode
-RUN locale-gen C.UTF-8 || true
-ENV LANG=C.UTF-8
 
 RUN groupadd --gid 3434 famedly \
   && useradd --uid 3434 --gid famedly --shell /bin/bash --create-home famedly \
@@ -46,17 +42,10 @@ CMD ["/bin/sh"]
 # Switching user can confuse Docker's idea of $HOME, so we set it explicitly
 ENV HOME /home/famedly
 
-# Install Google Cloud SDK
-
 RUN sudo apt-get update -qqy && sudo apt-get install -qqy \
-        python-dev \
-        python-pip \
-        python-setuptools \
         apt-transport-https \
+        gcc-multilib \
         lsb-release && \
-    sudo rm -rf /var/lib/apt/lists/*
-
-RUN sudo apt-get update && sudo apt-get install gcc-multilib && \
     sudo rm -rf /var/lib/apt/lists/*
 
 ARG sdk_version=sdk-tools-linux-4333796.zip
@@ -94,20 +83,6 @@ RUN sdkmanager \
   "emulator"
 
 RUN sdkmanager \
-  "build-tools;25.0.0" \
-  "build-tools;25.0.1" \
-  "build-tools;25.0.2" \
-  "build-tools;25.0.3" \
-  "build-tools;26.0.1" \
-  "build-tools;26.0.2" \
-  "build-tools;27.0.0" \
-  "build-tools;27.0.1" \
-  "build-tools;27.0.2" \
-  "build-tools;27.0.3" \
-  "build-tools;28.0.0" \
-  "build-tools;28.0.1" \
-  "build-tools;28.0.2" \
-  "build-tools;28.0.3" \
   "build-tools;29.0.0" \
   "build-tools;29.0.1" \
   "build-tools;29.0.2"
