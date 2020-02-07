@@ -31,7 +31,7 @@ RUN curl -L https://get.rvm.io | bash -s stable
 SHELL [ "/bin/bash", "-l", "-c" ]
 ENV PATH /usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RUN . /home/famedly/.rvm/scripts/rvm && rvm install 2.7
-RUN . /home/famedly/.rvm/scripts/rvm && gem install bundler --no-ri --no-rdoc
+RUN . /home/famedly/.rvm/scripts/rvm && gem install bundler --no-rdoc
 
 ENTRYPOINT ["/bin/bash", "-l", "-c"]
     
