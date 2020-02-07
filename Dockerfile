@@ -30,8 +30,8 @@ RUN gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A
 RUN curl -L https://get.rvm.io | bash -s stable
 SHELL [ "/bin/bash", "-l", "-c" ]
 ENV PATH /usr/local/rvm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-RUN . /usr/local/rvm/scripts/rvm && rvm install 2.7
-RUN . /usr/local/rvm/scripts/rvm && sudo gem install bundler --no-ri --no-rdoc
+RUN . /home/famedly/.rvm/scripts/rvm && rvm install 2.7
+RUN . /home/famedly/.rvm/scripts/rvm && sudo gem install bundler --no-ri --no-rdoc
 
 ENTRYPOINT ["/bin/bash", "-l", "-c"]
     
