@@ -1,21 +1,25 @@
 # Official docker image.
-image: docker:latest
-
-.docker: &dind
-  services:
-  - docker:dind
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_HOST: tcp://localhost:2375
-  #tags:
-  #- docker
-
+#image: docker:stable
+#
+#variables:
+#  DOCKER_DRIVER: overlay2
+#  DOCKER_HOST: tcp://localhost:2375
+#
+#services:
+#  - docker:18.09.7-dind
+#
 stages:
   - build_android
   - build
 docker-build-latest-android:
-  <<: *dind
+  # Official docker image.
+  image: docker:latest
   stage: build_android
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
+  services:
+    - docker:18.09.7-dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
@@ -27,8 +31,14 @@ docker-build-latest-android:
     - master
 
 docker-build-latest-master:
-  <<: *dind
+  # Official docker image.
+  image: docker:latest
   stage: build
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
+  services:
+    - docker:18.09.7-dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
@@ -39,9 +49,14 @@ docker-build-latest-master:
     - master
 
 docker-build-stable-master:
+  # Official docker image.
+  image: docker:latest
   stage: build
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
   services:
-    - docker:dind
+    - docker:18.09.7-dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
@@ -52,9 +67,14 @@ docker-build-stable-master:
     - master
 
 docker-build-beta-master:
+  # Official docker image.
+  image: docker:latest
   stage: build
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
   services:
-    - docker:dind
+    - docker:18.09.7-dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
@@ -65,8 +85,14 @@ docker-build-beta-master:
     - master
 
 docker-build-dev-master:
-  <<: *dind
+  # Official docker image.
+  image: docker:latest
   stage: build
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
+  services:
+    - docker:18.09.7-dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
@@ -77,8 +103,14 @@ docker-build-dev-master:
     - master
 
 docker-build:
-  <<: *dind
+  # Official docker image.
+  image: docker:latest
   stage: build
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
+  services:
+    - docker:18.09.7-dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
