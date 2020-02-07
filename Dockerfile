@@ -30,8 +30,8 @@ RUN sudo gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C27
     && curl -L https://get.rvm.io | sudo bash -s stable \
     && echo "[[ -s /usr/local/rvm/scripts/rvm ]] && source /usr/local/rvm/scripts/rvm"  | sudo tee -a /root/.bashrc \
     && echo "[[ -s /usr/local/rvm/scripts/rvm ]] && source /usr/local/rvm/scripts/rvm"  | tee -a /home/famedly/.bashrc \
-    && /bin/bash -l -c "source /root/.bashrc && sudo rvm requirements" \
-    && /bin/bash -l -c "source /root/.bashrc && sudo rvm install 2.7" \
-    && /bin/bash -l -c "source /root/.bashrc && sudo gem install bundler --no-ri --no-rdoc"
+    && /bin/bash -l -c "source /home/famedly/.bashrc && sudo rvm requirements" \
+    && /bin/bash -l -c "source /home/famedly/.bashrc && sudo rvm install 2.7" \
+    && /bin/bash -l -c "source /home/famedly/.bashrc && sudo gem install bundler --no-ri --no-rdoc"
 
     
