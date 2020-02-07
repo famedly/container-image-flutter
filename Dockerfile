@@ -31,3 +31,5 @@ RUN sudo gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C27
     && /bin/bash -l -c "sudo rvm requirements" \
     && /bin/bash -l -c "sudo rvm install 2.7" \
     && /bin/bash -l -c "sudo gem install bundler --no-ri --no-rdoc"
+
+    
