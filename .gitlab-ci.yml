@@ -1,6 +1,28 @@
 stages:
+  - build_java
   - build_android
   - build
+
+docker-build-latest-openjdk:
+  # Official docker image.
+  image: docker:latest
+  stage: build_java
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://localhost:2375
+  services:
+    - docker:18.09.7-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "${CI_REGISTRY_IMAGE}:openjdk" -f Dockerfile.openjdk .
+    - docker push "${CI_REGISTRY_IMAGE}:openjdk"
+  only:
+    refs:
+        - master
+    changes:
+        - Dockerfile.openjdk
+
 docker-build-latest-android:
   # Official docker image.
   image: docker:latest
@@ -13,13 +35,14 @@ docker-build-latest-android:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker build --pull -t "${CI_REGISTRY_IMAGE}:android" -f Dockerfile.android .
+    - docker build --pull -t "${CI_REGISTRY_IMAGE}:android" --build-arg java_image=$CI_REGISTRY_IMAGE:openjdk -f Dockerfile.android .
     - docker push "${CI_REGISTRY_IMAGE}:android"
   only:
     refs:
         - master
     changes:
         - Dockerfile.android
+        - Dockerfile.openjdk
 
 docker-build-latest-master:
   # Official docker image.

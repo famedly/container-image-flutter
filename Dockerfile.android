@@ -1,4 +1,5 @@
-FROM openjdk:8-slim
+ARG java_image
+FROM ${java_image}
 
 LABEL maintainer="info@famedly.com"
 
