@@ -6,7 +6,7 @@ LABEL maintainer="info@famedly.com"
 ARG flutter_version_url
 
 WORKDIR /opt/flutter
-ENV PATH="${PATH}:/home/famedly/.rvm/bin:/opt/flutter/flutter/bin"
+ENV PATH "${PATH}:/home/famedly/.rvm/bin:/opt/flutter/flutter/bin"
 
 # Install flutter
 RUN mkdir -p /opt/flutter && sudo chown -R famedly:famedly /opt/flutter && curl "${flutter_version_url}" --output ./flutter.tar.xz && tar xf ./flutter.tar.xz && rm ./flutter.tar.xz && sudo chown -R famedly:famedly /opt/flutter
