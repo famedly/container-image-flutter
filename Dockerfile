@@ -4,7 +4,7 @@ FROM ${android_image}
 LABEL maintainer="info@famedly.com"
 
 ARG flutter_version_url
-ENV PATH ${PATH}:/opt/flutter/flutter/bin
+ENV PATH "${PATH}:/opt/flutter/flutter/bin"
 
 WORKDIR /opt/flutter
 
@@ -32,4 +32,6 @@ SHELL [ "/bin/bash", "-l", "-c" ]
 ENV PATH="${PATH}:/home/famedly/.rvm/bin"
 RUN . /home/famedly/.rvm/scripts/rvm && rvm install 2.7
 RUN . /home/famedly/.rvm/scripts/rvm && gem install bundler
+ENV PATH "${PATH}:/opt/flutter/flutter/bin"
+SHELL ["/bin/sh", "-c"]
     
