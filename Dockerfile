@@ -15,7 +15,7 @@ RUN sudo apt-get update \
 
 # Install flutter
 RUN mkdir -p /opt/flutter && sudo chown -R famedly:famedly /opt/flutter && axel --output ./flutter.tar.xz "${flutter_version_url}" && tar xf ./flutter.tar.xz && rm ./flutter.tar.xz && sudo chown -R famedly:famedly /opt/flutter
-RUN flutter precache && flutter config --enable-web && flutter doctor
+RUN flutter config --enable-web && flutter doctor
 
 # Make sure we have UTF-8
 RUN echo "LC_ALL=en_US.UTF-8" | sudo tee -a /etc/environment && echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen && echo "LANG=en_US.UTF-8" | sudo tee -a /etc/locale.conf && sudo locale-gen en_US.UTF-8

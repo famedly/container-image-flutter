@@ -21,7 +21,7 @@ RUN apt-get update \
   && apt-get install -y \
     git apt \
     locales sudo ca-certificates tar gzip parallel \
-    unzip zip bzip2 gnupg curl wget make \
+    unzip zip bzip2 gnupg wget axel make \
   && sudo rm -rf /var/lib/apt/lists/*
 
 
@@ -54,17 +54,10 @@ ARG android_home=/opt/android/sdk
 
 # SHA-256 92ffee5a1d98d856634e8b71132e8a95d96c83a63fde1099be3d86df3106def9
 
-RUN sudo apt-get update && \
-    sudo apt-get install --yes \
-        xvfb lib32z1 lib32stdc++6 build-essential \
-        libcurl4-openssl-dev libglu1-mesa libxi-dev libxmu-dev \
-        libglu1-mesa-dev && \
-    sudo rm -rf /var/lib/apt/lists/*
-
 # Download and install Android SDK
 RUN sudo mkdir -p ${android_home} && \
     sudo chown -R famedly:famedly ${android_home} && \
-    curl --silent --show-error --location --fail --retry 3 --output /tmp/${sdk_version} https://dl.google.com/android/repository/${sdk_version} && \
+    axel --output /tmp/${sdk_version} https://dl.google.com/android/repository/${sdk_version} && \
     unzip -q /tmp/${sdk_version} -d ${android_home} && \
     rm /tmp/${sdk_version}
 
@@ -84,8 +77,6 @@ RUN sdkmanager \
   "emulator"
 
 RUN sdkmanager \
-  "build-tools;29.0.0" \
-  "build-tools;29.0.1" \
   "build-tools;29.0.2"
 
 # API_LEVEL string gets replaced by m4
@@ -95,7 +86,7 @@ ARG ndk_version=android-ndk-r20
 ARG android_ndk_home=/opt/android/${ndk_version}
 
 # install NDK
-RUN curl --silent --show-error --location --fail --retry 3 --output /tmp/${ndk_version}.zip https://dl.google.com/android/repository/${ndk_version}-linux-x86_64.zip && \
+RUN axel --output /tmp/${ndk_version}.zip https://dl.google.com/android/repository/${ndk_version}-linux-x86_64.zip && \
     sudo unzip -q /tmp/${ndk_version}.zip -d /opt/android && \
     rm /tmp/${ndk_version}.zip && \
     sudo chown -R famedly:famedly ${android_ndk_home}
