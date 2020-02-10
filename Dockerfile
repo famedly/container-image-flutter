@@ -10,7 +10,7 @@ ENV PATH /opt/flutter/flutter/bin:$PATH
 
 # Get openssl and wget
 RUN sudo apt-get update \
-    && sudo apt-get install --no-install-recommends -y openssl axel  \
+    && sudo apt-get install --no-install-recommends -y openssl axel lcov \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # Install flutter
