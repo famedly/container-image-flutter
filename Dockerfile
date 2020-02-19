@@ -8,9 +8,9 @@ ARG flutter_version_url
 WORKDIR /opt/flutter
 ENV PATH /opt/flutter/flutter/bin:$PATH
 
-# Get openssl and wget
+# Get openssl, axel, lcov and gcc
 RUN sudo apt-get update \
-    && sudo apt-get install --no-install-recommends -y openssl axel lcov \
+    && sudo apt-get install --no-install-recommends -y openssl axel lcov gcc \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # Install flutter
