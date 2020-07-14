@@ -81,7 +81,7 @@ RUN sdkmanager \
   "cmake;3.10.2.4988404"
 
 # API_LEVEL string gets replaced by m4
-RUN sdkmanager "platforms;android-29"
+RUN sdkmanager "platforms;android-29;android-30"
 
 ARG ndk_version=android-ndk-r21
 ARG android_ndk_home=/opt/android/${ndk_version}
