@@ -1,4 +1,4 @@
-FROM ruby:slim
+FROM ruby:2.7-slim
 LABEL maintainer="info@famedly.com"
 
 RUN set -eux; \
