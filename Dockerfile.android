@@ -85,14 +85,5 @@ RUN sdkmanager \
 RUN sdkmanager "platforms;android-28"
 RUN sdkmanager "platforms;android-29"
 RUN sdkmanager "platforms;android-30"
+RUN sdkmanager 'ndk;21.0.6113669'
 
-ARG ndk_version=android-ndk-r21
-ARG android_ndk_home=/opt/android/${ndk_version}
-
-# install NDK
-RUN axel --output /tmp/${ndk_version}.zip https://dl.google.com/android/repository/${ndk_version}-linux-x86_64.zip && \
-    sudo unzip -q /tmp/${ndk_version}.zip -d /opt/android && \
-    rm /tmp/${ndk_version}.zip && \
-    sudo chown -R famedly:famedly ${android_ndk_home}
-
-ENV ANDROID_NDK_HOME ${android_ndk_home}
