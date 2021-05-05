@@ -1,0 +1,11 @@
+ARG android_image
+FROM ${android_image}
+
+LABEL maintainer="info@famedly.com"
+
+RUN sdkmanager 'system-images;android-30;google_apis;x86'
+RUN echo "no" | avdmanager create avd --package 'system-images;android-30;google_apis;x86' --device pixel_xl --name test
+RUN sudo apt update && \
+    sudo apt install libgl1 && \
+    sudo rm -rf /var/lib/apt/lists/*
+

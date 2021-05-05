@@ -2,6 +2,10 @@ stages:
   - build_java
   - build_android
   - build
+  - build_integ
+
+default:
+  tags: [famedly, docker]
 
 docker-build-latest-openjdk:
   # Official docker image.
@@ -108,3 +112,30 @@ docker-build:
   except:
     - master
 
+docker-build-integ-stable-master:
+  # Official docker image.
+  image: docker:latest
+  stage: build_integ
+  services:
+    - docker:19.03.1-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "${CI_REGISTRY_IMAGE}:integration-stable" --build-arg android_image="$CI_REGISTRY_IMAGE:stable" -f Dockerfile.integrationtests .
+    - docker push "${CI_REGISTRY_IMAGE}:integration-stable"
+  only:
+    - master
+
+docker-build-integ:
+  # Official docker image.
+  image: docker:latest
+  stage: build_integ
+  services:
+    - docker:19.03.1-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG}-integration" --build-arg android_image="${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}" -f Dockerfile.integrationtests .
+    - docker push "$CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG}-integration"
+  except:
+    - master
