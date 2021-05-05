@@ -4,6 +4,9 @@ stages:
   - build
   - build_integ
 
+default:
+  tags: [famedly, docker]
+
 docker-build-latest-openjdk:
   # Official docker image.
   image: docker:latest
