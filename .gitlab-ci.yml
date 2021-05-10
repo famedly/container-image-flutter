@@ -139,3 +139,14 @@ docker-build-integ:
     - docker push "$CI_REGISTRY_IMAGE:${CI_COMMIT_REF_SLUG}-integration"
   except:
     - master
+
+docker-build-linux:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:19.03.1-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "${CI_REGISTRY_IMAGE}:linux-${CI_COMMIT_REF_SLUG}" --build-arg flutter_version_url=$CI_FLUTTER_STABLE_VERSION_URL -f Dockerfile.linux .
+    - docker push "${CI_REGISTRY_IMAGE}:linux-${CI_COMMIT_REF_SLUG}"
