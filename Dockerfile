@@ -3,7 +3,8 @@ FROM ${android_image}
 
 LABEL maintainer="info@famedly.com"
 
-ARG flutter_version_url
+ARG flutter_version
+ARG channel
 
 WORKDIR /opt/flutter
 ENV PATH /opt/flutter/flutter/bin:$PATH
@@ -14,7 +15,7 @@ RUN sudo apt-get update \
     && sudo rm -rf /var/lib/apt/lists/*
 
 # Install flutter
-RUN mkdir -p /opt/flutter && sudo chown -R famedly:famedly /opt/flutter && axel --output ./flutter.tar.xz "${flutter_version_url}" && tar xf ./flutter.tar.xz && rm ./flutter.tar.xz && sudo chown -R famedly:famedly /opt/flutter
+RUN mkdir -p /opt/flutter && sudo chown -R famedly:famedly /opt/flutter && axel --output ./flutter.tar.xz "https://storage.googleapis.com/flutter_infra_release/releases/${channel}/linux/flutter_linux_${flutter_version}-${channel}.tar.xz" && tar xf ./flutter.tar.xz && rm ./flutter.tar.xz && sudo chown -R famedly:famedly /opt/flutter
 RUN flutter config --enable-web && flutter doctor
 
 # Make sure we have UTF-8
