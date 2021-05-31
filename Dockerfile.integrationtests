@@ -1,5 +1,5 @@
-ARG android_image
-FROM ${android_image}
+ARG flutter_image
+FROM ${flutter_image}
 
 LABEL maintainer="info@famedly.com"
 

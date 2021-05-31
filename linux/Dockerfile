@@ -2,7 +2,8 @@ FROM debian:buster-slim
 
 LABEL maintainer="info@famedly.com"
 
-ARG flutter_version_url
+ARG flutter_version
+ARG channel
 
 ENV PATH /home/famedly/flutter/bin:$PATH
 
@@ -34,7 +35,7 @@ RUN groupadd --gid 3434 famedly \
     && useradd --uid 3434 --gid famedly --shell /bin/bash --create-home famedly
 
 # Install flutter
-RUN cd /home/famedly && curl "${flutter_version_url}" | tar xJ && chown -R famedly:famedly flutter
+RUN cd /home/famedly && curl "https://storage.googleapis.com/flutter_infra_release/releases/${channel}/linux/flutter_linux_${flutter_version}-${channel}.tar.xz" | tar xJ && chown -R famedly:famedly flutter
 RUN flutter doctor
 
 # Make sure we have UTF-8
