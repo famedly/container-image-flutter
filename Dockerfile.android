@@ -71,19 +71,15 @@ RUN mkdir ~/.android && echo '### User Sources for Android SDK Manager' > ~/.and
 RUN yes | sdkmanager --licenses && yes | sdkmanager --update
 
 # Update SDK manager and install system image, platform and build tools
+# We try to keep the last 2 build tools and platforms around, but only the latest ndk to keep the size down.
 RUN sdkmanager \
   "tools" \
   "platform-tools" \
-  "emulator"
-
-RUN sdkmanager \
+  "emulator" \
   "build-tools;29.0.2" \
-  "build-tools;28.0.3" \
-  "cmake;3.10.2.4988404"
-
-# API_LEVEL string gets replaced by m4
-RUN sdkmanager "platforms;android-28"
-RUN sdkmanager "platforms;android-29"
-RUN sdkmanager "platforms;android-30"
-RUN sdkmanager 'ndk;21.0.6113669'
+  "build-tools;30.0.2" \
+  "cmake;3.10.2.4988404" \
+  "platforms;android-29" \
+  "platforms;android-30" \
+  'ndk;21.4.7075529'
 
