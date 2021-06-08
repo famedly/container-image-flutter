@@ -26,6 +26,7 @@ RUN apt-get update \
         libgtk-3-dev \
         libblkid-dev \ 
         liblzma-dev \
+        libsecret-1-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Set timezone to UTC by default
