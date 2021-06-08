@@ -27,6 +27,7 @@ RUN apt-get update \
         libblkid-dev \ 
         liblzma-dev \
         libsecret-1-dev \
+        libjsoncpp-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Set timezone to UTC by default
