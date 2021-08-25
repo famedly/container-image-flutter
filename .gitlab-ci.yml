@@ -1,5 +1,4 @@
 stages:
-  - build_java
   - build_android
   - build
   - build_integ
@@ -16,25 +15,24 @@ workflow:
       variables:
         VERSION_SUFFIX: ""
 
-openjdk:
-  # Official docker image.
+# image for linux-native builds of flutter apps
+flutter-linux:
   image: docker:latest
-  stage: build_java
+  stage: build
+  needs: []
   services:
     - docker:19.03.1-dind
+  variables:
+    CHANNEL: stable
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker build --pull -t "${CI_REGISTRY_IMAGE}/openjdk:latest" -f Dockerfile.openjdk .
-    - docker push "${CI_REGISTRY_IMAGE}/openjdk:latest"
-  only:
-    refs:
-        - master
-    changes:
-        - Dockerfile.openjdk
+    - cd linux
+    - export IMAGE_NAME="${CI_REGISTRY_IMAGE}/flutter-linux/${CHANNEL}"
+    - docker build --pull -t "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}" --build-arg flutter_version=$FLUTTER_STABLE_VERSION --build-arg channel=$CHANNEL .
+    - docker push "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}"
 
-android:
-  # Official docker image.
+android-base:
   image: docker:latest
   stage: build_android
   services:
@@ -42,17 +40,14 @@ android:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker build --pull -t "${CI_REGISTRY_IMAGE}/android:latest" --build-arg java_image=$CI_REGISTRY_IMAGE/openjdk:latest -f Dockerfile.android .
-    - docker push "${CI_REGISTRY_IMAGE}/android:latest"
-  only:
-    refs:
-        - master
-    changes:
-        - Dockerfile.android
-        - Dockerfile.openjdk
+    - cd android
+    - export IMAGE_NAME="${CI_REGISTRY_IMAGE}/android-base"
+    - docker build -t "${IMAGE_NAME}:latest${VERSION_SUFFIX}" .
+    - docker push "${IMAGE_NAME}:latest${VERSION_SUFFIX}"
 
+# main consumable image, build in 3 variants corrsponding to the flutter release channels
+# based on the android-base image
 flutter:
-  # Official docker image.
   image: docker:latest
   stage: build
   parallel:
@@ -68,13 +63,13 @@ flutter:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
+    - cd alpine_flutter
     - export IMAGE_NAME="${CI_REGISTRY_IMAGE}/flutter/${CHANNEL}"
-    - docker build --pull -t "${IMAGE_NAME}:latest${VERSION_SUFFIX}" -t "${IMAGE_NAME}:${FLUTTER_VERSION}${VERSION_SUFFIX}" --build-arg flutter_version=$FLUTTER_VERSION --build-arg channel=$CHANNEL --build-arg android_image=$CI_REGISTRY_IMAGE/android:latest -f Dockerfile .
-    - docker push "${IMAGE_NAME}:latest${VERSION_SUFFIX}"
+    - docker build --pull -t "${IMAGE_NAME}:${FLUTTER_VERSION}${VERSION_SUFFIX}" --build-arg flutter_version=$FLUTTER_STABLE_VERSION --build-arg image_base="${CI_REGISTRY_IMAGE}/android-base:latest${VERSION_SUFFIX}" .
     - docker push "${IMAGE_NAME}:${FLUTTER_VERSION}${VERSION_SUFFIX}"
 
+# "flutter" + emulator tooling
 integration:
-  # Official docker image.
   image: docker:latest
   stage: build_integ
   services:
@@ -86,33 +81,3 @@ integration:
   script:
     - docker build --pull -t "${CI_REGISTRY_IMAGE}/integration/${CHANNEL}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}" --build-arg flutter_image="${CI_REGISTRY_IMAGE}/flutter/${CHANNEL}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}" -f Dockerfile.integrationtests .
     - docker push "${CI_REGISTRY_IMAGE}/integration/${CHANNEL}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}"
-
-flutter-alpine:
-  image: docker:latest
-  stage: build
-  services:
-    - docker:19.03.1-dind
-  variables:
-    CHANNEL: stable
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-  script:
-    - cd alpine_flutter
-    - export IMAGE_NAME="${CI_REGISTRY_IMAGE}/flutter-alpine/${CHANNEL}"
-    - docker build --pull -t "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}" --build-arg flutter_version=$FLUTTER_STABLE_VERSION .
-    - docker push "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}"
-
-flutter-linux:
-  image: docker:latest
-  stage: build
-  services:
-    - docker:19.03.1-dind
-  variables:
-    CHANNEL: stable
-  before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-  script:
-    - cd linux
-    - export IMAGE_NAME="${CI_REGISTRY_IMAGE}/flutter-linux/${CHANNEL}"
-    - docker build --pull -t "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}" --build-arg flutter_version=$FLUTTER_STABLE_VERSION --build-arg channel=$CHANNEL .
-    - docker push "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}"
