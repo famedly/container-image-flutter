@@ -5,4 +5,4 @@ LABEL maintainer="info@famedly.com"
 
 RUN sdkmanager 'emulator' 'system-images;android-30;google_apis;x86'
 RUN echo "no" | avdmanager create avd --package 'system-images;android-30;google_apis;x86' --device pixel_xl --name test
-RUN apk add --no-cache mesa-gl nodejs
+RUN apk add --no-cache mesa-gl nodejs nodejs-npm
