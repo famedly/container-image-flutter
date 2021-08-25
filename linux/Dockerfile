@@ -7,7 +7,7 @@ ARG channel
 
 ENV PATH /home/famedly/flutter/bin:$PATH
 
-# Get openssl, axel, lcov and gcc
+# Get openssl, lcov and gcc
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
         locales \
