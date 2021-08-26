@@ -28,11 +28,14 @@ RUN yes | sdkmanager --licenses
 
 # Update SDK manager and install system image, platform and build tools
 # We try to keep the last 2 build tools and platforms around, but only the latest ndk to keep the size down.
+# This unfortunately is a bit of wild guesswork which versions are actually required for our build because
+# various dependency packages require their own versions. Currently (AGP 7.0) default build-tools version
+# is still 30.0.2 even though there exist newer versions.
 RUN sdkmanager \
   "tools" \
   "platform-tools" \
   "build-tools;29.0.3" \
-  "build-tools;30.0.3" \
+  "build-tools;30.0.2" \
   "cmake;3.10.2.4988404" \
   "platforms;android-28" \
   "platforms;android-29" \
