@@ -4,7 +4,7 @@ stages:
   - build_integ
 
 default:
-  tags: [famedly, docker]
+  tags: [famedly, docker, docker-privileged]
 
 workflow:
   rules:
