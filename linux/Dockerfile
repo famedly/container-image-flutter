@@ -27,6 +27,8 @@ RUN apt-get update \
         libblkid-dev \ 
         liblzma-dev \
         libsecret-1-dev \
+        sqlite3 \
+        libsqlite3-dev \
         libjsoncpp-dev \
     && rm -rf /var/lib/apt/lists/*
 
