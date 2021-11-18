@@ -29,6 +29,7 @@ RUN apt-get update \
         libsecret-1-dev \
         sqlite3 \
         libsqlite3-dev \
+        libolm3 \
         libjsoncpp-dev \
     && rm -rf /var/lib/apt/lists/*
 
