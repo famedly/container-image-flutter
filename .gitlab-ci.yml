@@ -31,7 +31,7 @@ flutter-linux:
     - export IMAGE_NAME="${CI_REGISTRY_IMAGE}/flutter-linux/${CHANNEL}"
     - docker build --pull -t "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}" --build-arg flutter_version=$FLUTTER_STABLE_VERSION --build-arg channel=$CHANNEL .
     - docker push "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}"
-    - if [ -z "$VERSION_SUFFIX" ]; then docker tag docker push "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}" "${IMAGE_NAME}:latest"; docker push "${IMAGE_NAME}:latest"; fi
+    - if [ -z "$VERSION_SUFFIX" ]; then docker tag "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}" "${IMAGE_NAME}:latest"; docker push "${IMAGE_NAME}:latest"; fi
 
 android-base:
   image: docker:latest
@@ -68,7 +68,7 @@ flutter:
     - export IMAGE_NAME="${CI_REGISTRY_IMAGE}/flutter/${CHANNEL}"
     - docker build --pull -t "${IMAGE_NAME}:${FLUTTER_VERSION}${VERSION_SUFFIX}" --build-arg flutter_version=$FLUTTER_STABLE_VERSION --build-arg image_base="${CI_REGISTRY_IMAGE}/android-base:latest${VERSION_SUFFIX}" .
     - docker push "${IMAGE_NAME}:${FLUTTER_VERSION}${VERSION_SUFFIX}"
-    - if [ -z "$VERSION_SUFFIX" ]; then docker tag docker push "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}" "${IMAGE_NAME}:latest"; docker push "${IMAGE_NAME}:latest"; fi
+    - if [ -z "$VERSION_SUFFIX" ]; then docker tag "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}" "${IMAGE_NAME}:latest"; docker push "${IMAGE_NAME}:latest"; fi
 
 # "flutter" + emulator tooling
 integration:
@@ -84,4 +84,4 @@ integration:
     - export IMAGE_NAME="${CI_REGISTRY_IMAGE}/integration/${CHANNEL}"
     - docker build --pull -t "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}" --build-arg flutter_image="${CI_REGISTRY_IMAGE}/flutter/${CHANNEL}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}" -f Dockerfile.integrationtests .
     - docker push "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}"
-    - if [ -z "$VERSION_SUFFIX" ]; then docker tag docker push "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}" "${IMAGE_NAME}:latest"; docker push "${IMAGE_NAME}:latest"; fi
+    - if [ -z "$VERSION_SUFFIX" ]; then docker tag "${IMAGE_NAME}:${FLUTTER_STABLE_VERSION}" "${IMAGE_NAME}:latest"; docker push "${IMAGE_NAME}:latest"; fi
