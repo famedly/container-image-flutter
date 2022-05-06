@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 LABEL maintainer="info@famedly.com"
 
@@ -9,7 +9,8 @@ ENV PATH /home/famedly/flutter/bin:$PATH
 
 # Get openssl, lcov and gcc
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y \
+    && apt-get install --no-install-recommends --no-install-suggests -y \
+        sudo \
         locales \
         openssl \
         ca-certificates \
@@ -34,11 +35,11 @@ RUN apt-get update \
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 
 RUN groupadd --gid 3434 famedly \
-    && useradd --uid 3434 --gid famedly --shell /bin/bash --create-home famedly
+    && useradd --uid 3434 --gid famedly --groups sudo --shell /bin/bash --create-home famedly \
+    && (echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers)
 
 # Install flutter
-RUN cd /home/famedly && curl "https://storage.googleapis.com/flutter_infra_release/releases/${channel}/linux/flutter_linux_${flutter_version}-${channel}.tar.xz" | tar xJ && chown -R famedly:famedly flutter
-RUN flutter doctor
+RUN cd /home/famedly && curl "https://storage.googleapis.com/flutter_infra_release/releases/${channel}/linux/flutter_linux_${flutter_version}-${channel}.tar.xz" | tar xJ && chown -R famedly:famedly flutter && flutter doctor && flutter config --no-analytics
 
 # Make sure we have UTF-8
 RUN echo "LC_ALL=en_US.UTF-8" > /etc/environment \
