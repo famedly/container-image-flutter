@@ -40,5 +40,6 @@ RUN sdkmanager \
   "platforms;android-28" \
   "platforms;android-29" \
   "platforms;android-30" \
+  "platforms;android-31" \
   "ndk;21.4.7075529" \
  && sdkmanager --uninstall "emulator"
