@@ -39,9 +39,6 @@ RUN groupadd --gid 3434 famedly \
     && useradd --uid 3434 --gid famedly --groups sudo --shell /bin/bash --create-home famedly \
     && (echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers)
 
-# Install flutter
-RUN cd /home/famedly && curl "https://storage.googleapis.com/flutter_infra_release/releases/${channel}/linux/flutter_linux_${flutter_version}-${channel}.tar.xz" | tar xJ && chown -R famedly:famedly flutter && flutter doctor && flutter config --no-analytics
-
 # Make sure we have UTF-8
 RUN echo "LC_ALL=en_US.UTF-8" > /etc/environment \
  && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
@@ -51,3 +48,6 @@ RUN echo "LC_ALL=en_US.UTF-8" > /etc/environment \
 USER famedly
 ENV HOME /home/famedly
 ENV PATH /home/famedly/.local/bin:/home/famedly/bin:${PATH}
+
+# Install flutter
+RUN cd /home/famedly && curl "https://storage.googleapis.com/flutter_infra_release/releases/${channel}/linux/flutter_linux_${flutter_version}-${channel}.tar.xz" | tar xJ && flutter doctor && flutter config --no-analytics
