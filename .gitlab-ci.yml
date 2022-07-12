@@ -13,7 +13,7 @@ stages:
     - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
   script:
     - export IMAGE_NAME="${CI_REGISTRY_IMAGE}/${IMAGE_NAME_PART}/${CHANNEL}"
-    - if [ -z "$VERSION_SUFFIX" ]; then export $LATEST_DESTINATION="--destination=$IMAGE_NAME:latest"; fi
+    - if [ -z "$VERSION_SUFFIX" ]; then export LATEST_DESTINATION="--destination=$IMAGE_NAME:latest"; fi
     - /kaniko/executor --snapshotMode=redo --single-snapshot --context="${CI_PROJECT_DIR}/${DIR}" --dockerfile="${CI_PROJECT_DIR}/${DIR}/Dockerfile" --destination="${IMAGE_NAME}:${FLUTTER_VERSION}${VERSION_SUFFIX}" $LATEST_DESTINATION $EXTRA_BUILD_ARGS
 
 workflow:
