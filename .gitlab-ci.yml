@@ -14,7 +14,7 @@ stages:
   script:
     - export IMAGE_NAME="${CI_REGISTRY_IMAGE}/${IMAGE_NAME_PART}/${CHANNEL}"
     - if [ -z "$VERSION_SUFFIX" ]; then export LATEST_DESTINATION="--destination=$IMAGE_NAME:latest"; fi
-    - /kaniko/executor --snapshotMode=redo --single-snapshot --context="${CI_PROJECT_DIR}/${DIR}" --dockerfile="${CI_PROJECT_DIR}/${DIR}/Dockerfile" --destination="${IMAGE_NAME}:${FLUTTER_VERSION}${VERSION_SUFFIX}" $LATEST_DESTINATION $EXTRA_BUILD_ARGS
+    - /kaniko/executor --snapshotMode=redo --single-snapshot --context="${CI_PROJECT_DIR}/${DIR}" --dockerfile="${CI_PROJECT_DIR}/${DIR}/Dockerfile" --destination="${IMAGE_NAME}:${VERSION}${VERSION_SUFFIX}" $LATEST_DESTINATION $EXTRA_BUILD_ARGS
 
 workflow:
   rules:
@@ -35,7 +35,7 @@ flutter-linux:
     CHANNEL: stable
     DIR: linux
     IMAGE_NAME_PART: flutter-linux
-    FLUTTER_VERSION: ${FLUTTER_STABLE_VERSION}
+    VERSION: ${FLUTTER_STABLE_VERSION}
     EXTRA_BUILD_ARGS: "--build-arg flutter_version=$FLUTTER_STABLE_VERSION --build-arg channel=$CHANNEL"
 
 android-base:
@@ -45,7 +45,7 @@ android-base:
     CHANNEL: stable
     DIR: android
     IMAGE_NAME_PART: android-base
-    FLUTTER_VERSION: ${FLUTTER_STABLE_VERSION}
+    VERSION: ${FLUTTER_STABLE_VERSION}
 
 # main consumable image, build in 3 variants corrsponding to the flutter release channels
 # based on the android-base image
@@ -55,11 +55,11 @@ flutter:
   parallel:
     matrix:
       - CHANNEL: stable
-        FLUTTER_VERSION: ${FLUTTER_STABLE_VERSION}
+        VERSION: ${FLUTTER_STABLE_VERSION}
       - CHANNEL: beta
-        FLUTTER_VERSION: ${FLUTTER_BETA_VERSION}
+        VERSION: ${FLUTTER_BETA_VERSION}
       - CHANNEL: dev
-        FLUTTER_VERSION: ${FLUTTER_DEV_VERSION}
+        VERSION: ${FLUTTER_DEV_VERSION}
   variables:
     DIR: alpine_flutter
     IMAGE_NAME_PART: flutter
@@ -73,5 +73,16 @@ integration:
     CHANNEL: stable
     DIR: integration
     IMAGE_NAME_PART: integration
-    FLUTTER_VERSION: ${FLUTTER_STABLE_VERSION}
+    VERSION: ${FLUTTER_STABLE_VERSION}
     EXTRA_BUILD_ARGS: "--build-arg flutter_image=${CI_REGISTRY_IMAGE}/flutter/${CHANNEL}:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}"
+
+cypress:
+  extends: .docker
+  stage: build
+  needs: []
+  variables:
+    CHANNEL: stable
+    DIR: cypress
+    IMAGE_NAME_PART: cypress
+    VERSION: ${CYPRESS_VERSION} # cypress version, don't forget to update
+    EXTRA_BUILD_ARGS: "--build-arg cypress_version=${CYPRESS_VERSION}"
