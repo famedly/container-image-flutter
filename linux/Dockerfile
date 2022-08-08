@@ -17,6 +17,7 @@ RUN apt-get update \
         git \
         openssh-client \
         lcov \
+        python3 \
         curl \
         unzip \
         xz-utils \
@@ -34,6 +35,9 @@ RUN apt-get update \
 
 # Set timezone to UTC by default
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
+
+# Add coverage script
+RUN curl -o /bin/lcov_cobertura.py https://raw.githubusercontent.com/eriwen/lcov-to-cobertura-xml/master/lcov_cobertura/lcov_cobertura.py && sed 's/env python/env python3/' -i /bin/lcov_cobertura.py && chmod +x /bin/lcov_cobertura.py
 
 RUN groupadd --gid 3434 famedly \
     && useradd --uid 3434 --gid famedly --groups sudo --shell /bin/bash --create-home famedly \
