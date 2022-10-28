@@ -3,6 +3,10 @@ stages:
   - build
   - build_integ
 
+variables:
+  CYPRESS_VERSION: 10.3.1
+  FLUTTER_STABLE_VERSION: 3.3.5
+
 .docker:
   tags: [famedly, docker]
   image: # https://docs.gitlab.com/ee/ci/docker/using_kaniko.html
@@ -56,10 +60,6 @@ flutter:
     matrix:
       - CHANNEL: stable
         VERSION: ${FLUTTER_STABLE_VERSION}
-      - CHANNEL: beta
-        VERSION: ${FLUTTER_BETA_VERSION}
-      - CHANNEL: dev
-        VERSION: ${FLUTTER_DEV_VERSION}
   variables:
     DIR: alpine_flutter
     IMAGE_NAME_PART: flutter
