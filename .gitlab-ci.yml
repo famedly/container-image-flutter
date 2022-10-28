@@ -5,7 +5,7 @@ stages:
 
 variables:
   CYPRESS_VERSION: 10.3.1
-  FLUTTER_STABLE_VERSION: 3.3.5
+  FLUTTER_STABLE_VERSION: 3.3.6
 
 .docker:
   tags: [famedly, docker]
