@@ -6,6 +6,7 @@ stages:
 variables:
   CYPRESS_VERSION: 10.3.1
   FLUTTER_STABLE_VERSION: 3.3.7
+  CHANNEL: stable
 
 .docker:
   tags: [famedly, docker]
@@ -36,7 +37,6 @@ flutter-linux:
   stage: build
   needs: []
   variables:
-    CHANNEL: stable
     DIR: linux
     IMAGE_NAME_PART: flutter-linux
     VERSION: ${FLUTTER_STABLE_VERSION}
@@ -46,7 +46,6 @@ android-base:
   extends: .docker
   stage: build_android
   variables:
-    CHANNEL: stable
     DIR: android
     IMAGE_NAME_PART: android-base
     VERSION: ${FLUTTER_STABLE_VERSION}
@@ -56,13 +55,10 @@ android-base:
 flutter:
   extends: .docker
   stage: build
-  parallel:
-    matrix:
-      - CHANNEL: stable
-        VERSION: ${FLUTTER_STABLE_VERSION}
   variables:
     DIR: alpine_flutter
     IMAGE_NAME_PART: flutter
+    VERSION: ${FLUTTER_STABLE_VERSION}
     EXTRA_BUILD_ARGS: "--build-arg flutter_version=$FLUTTER_STABLE_VERSION --build-arg image_base=${CI_REGISTRY_IMAGE}/android-base/stable:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}"
 
 # "flutter" + emulator tooling
@@ -70,7 +66,6 @@ integration:
   extends: .docker
   stage: build_integ
   variables:
-    CHANNEL: stable
     DIR: integration
     IMAGE_NAME_PART: integration
     VERSION: ${FLUTTER_STABLE_VERSION}
@@ -81,7 +76,6 @@ cypress:
   stage: build
   needs: []
   variables:
-    CHANNEL: stable
     DIR: cypress
     IMAGE_NAME_PART: cypress
     VERSION: ${CYPRESS_VERSION} # cypress version, don't forget to update
