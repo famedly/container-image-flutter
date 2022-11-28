@@ -11,6 +11,6 @@ ENV LANG=C.UTF-8
 
 RUN git clone --depth 1 https://github.com/flutter/flutter.git -b $flutter_version
 
-RUN flutter precache --linux
+RUN flutter precache --linux --android --web
 
 WORKDIR /opt

@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.17
 
 LABEL maintainer="info@famedly.com"
 
@@ -25,25 +25,26 @@ RUN apk add --no-cache curl openjdk11 ruby-full ruby-dev ruby-rdoc make g++ bash
 RUN curl -o /bin/lcov_cobertura.py https://raw.githubusercontent.com/eriwen/lcov-to-cobertura-xml/master/lcov_cobertura/lcov_cobertura.py && sed 's/env python/env python3/' -i /bin/lcov_cobertura.py && chmod +x /bin/lcov_cobertura.py
 
 # Download and install Android SDK
-RUN mkdir -p ${ANDROID_SDK_ROOT} && \
-    curl https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip | busybox unzip -d ${ANDROID_SDK_ROOT} - && mkdir ${ANDROID_SDK_ROOT}/cmdline-tools/latest && mv ${ANDROID_SDK_ROOT}/cmdline-tools/* ${ANDROID_SDK_ROOT}/cmdline-tools/latest || true && chmod +x ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/*
+RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools && \
+    curl https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip | busybox unzip -d ${ANDROID_SDK_ROOT}_temp - && mv ${ANDROID_SDK_ROOT}_temp/cmdline-tools ${ANDROID_SDK_ROOT}/cmdline-tools/latest && rm -R ${ANDROID_SDK_ROOT}_temp && chmod +x ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/*
 
 RUN yes | sdkmanager --licenses
 
 # Update SDK manager and install system image, platform and build tools
-# We try to keep the last 2 build tools and platforms around, but only the latest ndk to keep the size down.
-# This unfortunately is a bit of wild guesswork which versions are actually required for our build because
-# various dependency packages require their own versions. Currently (AGP 7.0) default build-tools version
-# is still 30.0.2 even though there exist newer versions.
+# We need to install all required platforms, but we try to only have one ndk (to
+# keep size down) and have only one verion of the build tools. CMake versions
+# are added as dependencies require them.
 RUN sdkmanager \
   "tools" \
   "platform-tools" \
-  "build-tools;29.0.3" \
-  "build-tools;30.0.2" \
-  "cmake;3.10.2.4988404" \
-  "platforms;android-28" \
-  "platforms;android-29" \
-  "platforms;android-30" \
+  "build-tools;30.0.3" \
+  "cmake;3.18.1" \
+  "cmake;3.22.1" \
+  "platforms;android-33" \
+  "platforms;android-32" \
   "platforms;android-31" \
+  "platforms;android-30" \
+  "platforms;android-29" \
+  "platforms;android-28" \
   "ndk;21.4.7075529" \
  && sdkmanager --uninstall "emulator"
