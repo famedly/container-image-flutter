@@ -5,7 +5,7 @@ stages:
 
 variables:
   CYPRESS_VERSION: 12.3.0 #cypress/included
-  FLUTTER_STABLE_VERSION: 3.7.1
+  FLUTTER_STABLE_VERSION: 3.7.3
   CHANNEL: stable
 
 .docker:
