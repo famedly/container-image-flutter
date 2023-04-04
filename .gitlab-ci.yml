@@ -4,8 +4,8 @@ stages:
   - build_integ
 
 variables:
-  CYPRESS_VERSION: 12.3.0 #cypress/included
-  FLUTTER_STABLE_VERSION: 3.7.8
+  CYPRESS_VERSION: 12.9.0 #cypress/included
+  FLUTTER_STABLE_VERSION: 3.7.9
   CHANNEL: stable
 
 .docker:
