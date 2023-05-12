@@ -31,7 +31,7 @@ RUN apt-get update \
         libsecret-1-dev \
         libjsoncpp-dev \
         libolm3 \
-        sqlite3-dev \
+        libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Set timezone to UTC by default
