@@ -5,7 +5,7 @@ stages:
 
 variables:
   CYPRESS_VERSION: 12.9.0 #cypress/included
-  FLUTTER_STABLE_VERSION: 3.7.12
+  FLUTTER_STABLE_VERSION: 3.10.0
   CHANNEL: stable
 
 .docker:
@@ -24,12 +24,11 @@ variables:
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH && $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
-      variables:                              # namespace builds on branches
+      variables: # namespace builds on branches
         VERSION_SUFFIX: "-$CI_COMMIT_REF_SLUG"
     - if: $CI_COMMIT_BRANCH && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
       variables:
         VERSION_SUFFIX: ""
-
 
 # image for linux-native builds of flutter apps
 flutter-linux:
