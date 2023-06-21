@@ -9,7 +9,7 @@ ENV PATH=${FLUTTER_HOME}:${PATH}
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-RUN git clone --depth 1 https://github.com/flutter/flutter.git -b $flutter_version
+RUN ( git clone --depth 1 https://github.com/flutter/flutter.git -b ${flutter_version} || git clone --depth 1 https://github.via-ipv6.com/flutter/flutter.git -b ${flutter_version} )
 
 RUN flutter precache --linux --android --web
 
