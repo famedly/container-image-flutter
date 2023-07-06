@@ -55,4 +55,4 @@ ENV HOME /home/famedly
 ENV PATH /home/famedly/.local/bin:/home/famedly/bin:${PATH}
 
 # Install flutter
-RUN cd /home/famedly && curl "https://storage.googleapis.com/flutter_infra_release/releases/${channel}/linux/flutter_linux_${flutter_version}-${channel}.tar.xz" | tar xJ && flutter doctor && flutter config --no-analytics
+RUN cd /home/famedly && ( git clone --depth 1 https://github.com/flutter/flutter.git -b ${flutter_version} || git clone --depth 1 https://github.via-ipv6.com/flutter/flutter.git -b ${flutter_version} ) && flutter doctor && flutter config --no-analytics
