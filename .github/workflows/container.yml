@@ -12,6 +12,7 @@ on:
   pull_request:
     branches: [master] # only PRs to master branch
     #types: [opened, synchronized] <- already pretty much the defaults
+  merge_group:
 
 jobs:
   names:
