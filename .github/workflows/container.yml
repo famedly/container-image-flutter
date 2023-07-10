@@ -1,0 +1,108 @@
+name: Flutter Images
+
+env:
+  CYPRESS_VERSION: 12.9.0
+  FLUTTER_STABLE_VERSION: 3.10.4
+  VERSION_SUFFIX: ${{ github.ref == 'refs/heads/master' && '' || github.ref }}
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches: [master] # only PRs to master branch
+    #types: [opened, synchronized] <- already pretty much the defaults
+
+jobs:
+  names:
+    runs-on: ubuntu-latest
+    outputs:
+      version_suffix: ${{ github.ref == 'refs/heads/master' && '' || '-' }}${{ github.ref == 'refs/heads/master' && '' || steps.slug.outputs.slug-url }}
+      flutter_version: ${{ steps.flutver.outputs.slug }}
+    steps:
+      - name: Sluggify suffix
+        id: slug
+        uses: rlespinasse/slugify-value@a4879db1eb3db9bbee01dca36f98a8236c2b8239 # 1.4.0
+        with:
+          key: VERSION_SUFFIX
+          value: ${{ github.ref }}
+      - name: Pass through flutter version
+        id: flutver
+        uses: rlespinasse/slugify-value@a4879db1eb3db9bbee01dca36f98a8236c2b8239 # 1.4.0
+        with:
+          key: FLUTTER_STABLE_VERSION
+
+  android:
+    permissions:
+      packages: write
+      contents: read
+    needs: [names]
+    uses: ./.github/workflows/build-container.yml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      version_suffix: ${{ needs.names.outputs.version_suffix }}
+      version: ${{ needs.names.outputs.flutter_version }}
+      image: "android"
+
+  flutter:
+    permissions:
+      packages: write
+      contents: read
+    needs: [names, android]
+    uses: ./.github/workflows/build-container.yml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      version_suffix: ${{ needs.names.outputs.version_suffix }}
+      version: ${{ needs.names.outputs.flutter_version }}
+      image: "flutter"
+      build-args: |
+        flutter_version=${{ needs.names.outputs.flutter_version}}
+        image_base=ghcr.io/${{ github.repository }}/android:${{ needs.names.outputs.flutter_version }}${{ needs.names.outputs.version_suffix }}
+
+  integration:
+    permissions:
+      packages: write
+      contents: read
+    needs: [names, flutter]
+    uses: ./.github/workflows/build-container.yml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      version_suffix: ${{ needs.names.outputs.version_suffix }}
+      version: ${{ needs.names.outputs.flutter_version }}
+      image: "integration"
+      build-args: |
+        flutter_image=ghcr.io/${{ github.repository }}/flutter:${{ needs.names.outputs.flutter_version }}${{ needs.names.outputs.version_suffix }}
+
+  flutter-linux:
+    permissions:
+      packages: write
+      contents: read
+    needs: [names]
+    uses: ./.github/workflows/build-container.yml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      version_suffix: ${{ needs.names.outputs.version_suffix }}
+      version: ${{ needs.names.outputs.flutter_version }}
+      image: "flutter-linux"
+      build-args: |
+        flutter_version=${{ needs.names.outputs.flutter_version}}
+        channel=stable
+
+  cypress:
+    permissions:
+      packages: write
+      contents: read
+    needs: [names]
+    uses: ./.github/workflows/build-container.yml
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      version_suffix: ${{ needs.names.outputs.version_suffix }}
+      version: 12.9.0
+      image: "cypress"
+      build-args: |
+        cypress_version=12.9.0
