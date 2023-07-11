@@ -36,7 +36,7 @@ flutter-linux:
   stage: build
   needs: []
   variables:
-    DIR: linux
+    DIR: flutter-linux
     IMAGE_NAME_PART: flutter-linux
     VERSION: ${FLUTTER_STABLE_VERSION}
     EXTRA_BUILD_ARGS: "--build-arg flutter_version=$FLUTTER_STABLE_VERSION --build-arg channel=$CHANNEL"
@@ -55,7 +55,7 @@ flutter:
   extends: .docker
   stage: build
   variables:
-    DIR: alpine_flutter
+    DIR: flutter
     IMAGE_NAME_PART: flutter
     VERSION: ${FLUTTER_STABLE_VERSION}
     EXTRA_BUILD_ARGS: "--build-arg flutter_version=$FLUTTER_STABLE_VERSION --build-arg image_base=${CI_REGISTRY_IMAGE}/android-base/stable:${FLUTTER_STABLE_VERSION}${VERSION_SUFFIX}"

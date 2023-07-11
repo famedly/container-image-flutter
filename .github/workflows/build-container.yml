@@ -1,0 +1,53 @@
+name: "Build container image"
+
+on:
+  workflow_call:
+    inputs:
+      version_suffix:
+        description: "String to append after the version"
+        type: string
+        required: true
+      version:
+        description: "The version to publish the tag under"
+        type: string
+        required: true
+      build-args:
+        description: "Extra build arguments"
+        type: string
+        required: false
+      image:
+        description: "The name of the built image"
+        type: string
+        required: true
+    secrets:
+      token:
+        description: "The github token"
+        required: true
+
+jobs:
+  build-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.token }}
+      - uses: int128/kaniko-action@516445a350a168ee12ff464e3054c9f481d42ecf # v1.22.0
+        env:
+          IMAGE_NAME: ghcr.io/${{ github.repository }}/${{ inputs.image }}
+        with:
+          push: true
+          tags: ${{ format( (github.ref == 'refs/heads/master' && '{0}:{1},{0}:latest' || '{0}:{1}' ), env.IMAGE_NAME, format('{0}{1}', inputs.version, inputs.version_suffix )) }}
+          labels: |
+            org.opencontainers.image.source=${{github.repository}}
+            org.opencontainers.image.description="Basic image with android tools"
+          cache: true
+          cache-repository: ghcr.io/${{ github.repository }}/cache
+          context: ${{ inputs.image }}
+          kaniko-args: |
+            --single-snapshot
+            --snapshot-mode=redo
+            --compressed-caching=false
+          build-args: ${{inputs.build-args}}
