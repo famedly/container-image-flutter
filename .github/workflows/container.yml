@@ -22,7 +22,7 @@ jobs:
   names:
     runs-on: ubuntu-latest
     outputs:
-      version_suffix: ${{ github.ref != 'master' && '-' || '' }}${{ github.ref != 'master' && steps.slug.outputs.slug-url || '' }}
+      version_suffix: ${{ github.ref != 'refs/heads/master' && '-' || '' }}${{ github.ref != 'refs/heads/master' && steps.slug.outputs.slug-url || '' }}
       flutter_version: ${{ steps.flutver.outputs.slug }}
     steps:
       - name: Sluggify suffix
