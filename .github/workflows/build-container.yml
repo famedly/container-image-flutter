@@ -39,7 +39,7 @@ jobs:
           IMAGE_NAME: ghcr.io/${{ github.repository }}/${{ inputs.image }}
         with:
           push: true
-          tags: ${{ format( (github.ref == 'refs/heads/master' && '{0}:{1},{0}:latest' || '{0}:{1}' ), env.IMAGE_NAME, format('{0}{1}', inputs.version, inputs.version_suffix )) }}
+          tags: ${{ format( (github.ref == 'refs/heads/master' && '{0}:{1}\n{0}:latest' || '{0}:{1}' ), env.IMAGE_NAME, format('{0}{1}', inputs.version, inputs.version_suffix )) }}
           labels: |
             org.opencontainers.image.source=${{github.repository}}
             org.opencontainers.image.description="Basic image with android tools"
