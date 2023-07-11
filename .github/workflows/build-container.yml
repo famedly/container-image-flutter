@@ -37,9 +37,12 @@ jobs:
       - uses: int128/kaniko-action@516445a350a168ee12ff464e3054c9f481d42ecf # v1.22.0
         env:
           IMAGE_NAME: ghcr.io/${{ github.repository }}/${{ inputs.image }}
+          latesttemplate: |
+            {1}:{2}
+            {1}:lastest
         with:
           push: true
-          tags: ${{ format( (github.ref == 'refs/heads/master' && '{0}:{1}\n{0}:latest' || '{0}:{1}' ), env.IMAGE_NAME, format('{0}{1}', inputs.version, inputs.version_suffix )) }}
+          tags: ${{ format( (github.ref == 'refs/heads/master' && env.latesttemplate || '{0}:{1}' ), env.IMAGE_NAME, format('{0}{1}', inputs.version, inputs.version_suffix )) }}
           labels: |
             org.opencontainers.image.source=${{github.repository}}
             org.opencontainers.image.description="Basic image with android tools"
