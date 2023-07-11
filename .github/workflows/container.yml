@@ -3,7 +3,7 @@ name: Flutter Images
 env:
   CYPRESS_VERSION: 12.9.0
   FLUTTER_STABLE_VERSION: 3.10.4
-  VERSION_SUFFIX: ${{ github.ref == 'refs/heads/master' && '' || github.ref }}
+  VERSION_SUFFIX: ${{ github.ref == 'master' && '' || github.ref }}
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
   names:
     runs-on: ubuntu-latest
     outputs:
-      version_suffix: ${{ github.ref == 'refs/heads/master' && '' || '-' }}${{ github.ref == 'refs/heads/master' && '' || steps.slug.outputs.slug-url }}
+      version_suffix: ${{ github.ref == 'master' && '' || '-' }}${{ github.ref == 'master' && '' || steps.slug.outputs.slug-url }}
       flutter_version: ${{ steps.flutver.outputs.slug }}
     steps:
       - name: Sluggify suffix
