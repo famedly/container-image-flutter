@@ -38,8 +38,8 @@ jobs:
         env:
           IMAGE_NAME: ghcr.io/${{ github.repository }}/${{ inputs.image }}
           latesttemplate: |
-            {1}:{2}
-            {1}:lastest
+            {0}:{1}
+            {0}:latest
         with:
           push: true
           tags: ${{ format( (github.ref == 'refs/heads/master' && env.latesttemplate || '{0}:{1}' ), env.IMAGE_NAME, format('{0}{1}', inputs.version, inputs.version_suffix )) }}
