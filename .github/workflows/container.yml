@@ -2,7 +2,7 @@ name: Flutter Images
 
 env:
   CYPRESS_VERSION: 12.9.0
-  FLUTTER_STABLE_VERSION: 3.10.4
+  FLUTTER_STABLE_VERSION: 3.10.6
 
 on:
   push:
@@ -23,7 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version_suffix: ${{ github.ref != 'refs/heads/master' && '-' || '' }}${{ github.ref != 'refs/heads/master' && steps.slug.outputs.slug-url || '' }}
-      flutter_version: ${{ steps.flutver.outputs.slug }}
+      flutter_version: ${{ steps.flutver.outputs.slug }} # slugified version because why not
+      cypress_version: ${{ steps.cypressver.outputs.slug }} # slugified version because why not
     steps:
       - name: Sluggify suffix
         id: slug
@@ -36,6 +37,11 @@ jobs:
         uses: rlespinasse/slugify-value@a4879db1eb3db9bbee01dca36f98a8236c2b8239 # 1.4.0
         with:
           key: FLUTTER_STABLE_VERSION
+      - name: Pass through cypress version
+        id: cypressver
+        uses: rlespinasse/slugify-value@a4879db1eb3db9bbee01dca36f98a8236c2b8239 # 1.4.0
+        with:
+          key: CYPRESS_VERSION
 
   android:
     permissions:
@@ -107,10 +113,10 @@ jobs:
       token: ${{ secrets.GITHUB_TOKEN }}
     with:
       version_suffix: ${{ needs.names.outputs.version_suffix }}
-      version: 12.9.0
+      version: ${{ needs.names.outputs.cypress_version }}
       image: "cypress"
       build-args: |
-        cypress_version=12.9.0
+        cypress_version=${{ needs.names.outputs.cypress_version }}
 
   all-passed:
     runs-on: ubuntu-latest
