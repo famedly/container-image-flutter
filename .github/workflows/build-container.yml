@@ -42,6 +42,7 @@ jobs:
             {0}:latest
         with:
           push: true
+          push-retry: 3 # sometimes it randomly fails with a ` http2: client connection force closed via ClientConn.Close`
           tags: ${{ format( (github.ref == 'refs/heads/master' && env.latesttemplate || '{0}:{1}' ), env.IMAGE_NAME, format('{0}{1}', inputs.version, inputs.version_suffix )) }}
           labels: |
             org.opencontainers.image.source=${{github.repository}}
