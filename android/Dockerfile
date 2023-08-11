@@ -12,7 +12,7 @@ ENV PATH=${ANDROID_SDK_ROOT}/emulator:${ANDROID_SDK_ROOT}/cmdline-tools/latest/b
 COPY sgerrand.rsa.pub /etc/apk/keys/sgerrand.rsa.pub
 
 # Install java and ruby and glibc dependencies for android and (later) flutter
-RUN apk add --no-cache curl openjdk11 ruby-full ruby-dev ruby-rdoc make g++ bash curl unzip git gzip tar xz jq openssh-client tzdata python3 \
+RUN apk add --no-cache curl openjdk20 ruby-full ruby-dev ruby-rdoc make g++ bash curl unzip git gzip tar xz jq openssh-client tzdata python3 \
  && apk add lcov --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing \
  && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
  && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk \
