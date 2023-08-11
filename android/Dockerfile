@@ -5,7 +5,7 @@ LABEL maintainer="info@famedly.com"
 # Set timezone to UTC by default
 RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime
 
-ENV ANDROID_SDK_TOOLS=10406996_latest GLIBC_VERSION=2.34-r0 ANDROID_HOME=/opt/android/sdk ANDROID_SDK_ROOT=/opt/android/sdk ADB_INSTALL_TIMEOUT=120 JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+ENV ANDROID_SDK_TOOLS=10406996_latest GLIBC_VERSION=2.34-r0 ANDROID_HOME=/opt/android/sdk ANDROID_SDK_ROOT=/opt/android/sdk ADB_INSTALL_TIMEOUT=120 JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 ENV PATH=${ANDROID_SDK_ROOT}/emulator:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${PATH}
 
 # Add pubkey for glibc package
