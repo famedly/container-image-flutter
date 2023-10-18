@@ -2,7 +2,7 @@ name: Flutter Images
 
 env:
   CYPRESS_VERSION: 12.17.1
-  FLUTTER_STABLE_VERSION: 3.13.1
+  FLUTTER_STABLE_VERSION: 3.13.7
 
 on:
   push:
