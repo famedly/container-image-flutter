@@ -34,7 +34,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.token }}
-      - uses: int128/kaniko-action@516445a350a168ee12ff464e3054c9f481d42ecf # v1.22.0
+      - uses: int128/kaniko-action@96914c73dc2d44cc9e56ea95b9d65852a116620a # v1.43.0
         env:
           IMAGE_NAME: ghcr.io/${{ github.repository }}/${{ inputs.image }}
           latesttemplate: |
