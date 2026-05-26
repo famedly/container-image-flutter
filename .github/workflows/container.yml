@@ -28,18 +28,18 @@ jobs:
     steps:
       - name: Sluggify suffix
         id: slug
-        uses: rlespinasse/slugify-value@a4879db1eb3db9bbee01dca36f98a8236c2b8239 # 1.4.0
+        uses: rlespinasse/slugify-value@e4212caf3f50bcf0466dfdcb5b4383cba39ef4a9 # 1.4.0
         with:
           key: VERSION_SUFFIX
           value: ${{ github.ref }}
       - name: Pass through flutter version
         id: flutver
-        uses: rlespinasse/slugify-value@a4879db1eb3db9bbee01dca36f98a8236c2b8239 # 1.4.0
+        uses: rlespinasse/slugify-value@e4212caf3f50bcf0466dfdcb5b4383cba39ef4a9 # 1.4.0
         with:
           key: FLUTTER_STABLE_VERSION
       - name: Pass through cypress version
         id: cypressver
-        uses: rlespinasse/slugify-value@a4879db1eb3db9bbee01dca36f98a8236c2b8239 # 1.4.0
+        uses: rlespinasse/slugify-value@e4212caf3f50bcf0466dfdcb5b4383cba39ef4a9 # 1.4.0
         with:
           key: CYPRESS_VERSION
 
